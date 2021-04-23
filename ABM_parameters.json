@@ -1,0 +1,36 @@
+{
+    "Name": "Test1",
+    "Population": 100000,
+    "Init_Inf": 1,
+    
+    "Days": 300,
+    
+    "Randomize": false,
+    "Sectors": ["General"],
+    "SecVirus": {
+        "General":  {"N":[1.0],"E":[100000],"V":[8,2]}
+    },
+    "Family_Size": [5,2],
+    "Density": 327,
+    "Pop_Groups": [100],
+    "Pop_Dist": [1.0],
+    "Empl_Dist": [
+        [1.0, 0.0]
+    ],
+    
+    "VName":"V0",
+    "R0": 3.0,
+    "Death_Rates":[0.05],
+    "Inc_Period": [7],
+    "Cure_Days": 14,
+    "Severity": [[0.80,0.25,0.04]],
+    "UseTran":0,
+    "Virus_Params": {
+        "Transport" : {"Time":0,"Distance":1}, 
+        "Home" 		: {"Time":0,"Distance":1},
+        "Grocery"	: {"Time":0,"Distance":4},
+        "Unemployed": {"Time":0,"Distance":1},
+        "Random"	: {"Time":0,"Distance":2}
+        },
+    "Commerce_On": false
+}

@@ -5,7 +5,7 @@ import json
 import os
 import pandas as pd
 
-with open("parameters.json") as f:
+with open("SIR_parameters.json") as f:
     args = json.load(f)
 DIR     = "Results\\"+args["Name"]
 os.makedirs(DIR,exist_ok=True)
