@@ -4,5 +4,6 @@
     "Init_Inf": 1,
     "Inc_Period": 7,
     "R0": 3.0,
+    "Death_Rate": 0.05,
     "Days": 300
 }
