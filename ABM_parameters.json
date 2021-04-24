@@ -3,7 +3,7 @@
     "Population": 100000,
     "Init_Inf": 1,
     
-    "Days": 300,
+    "Days": 100,
     
     "Randomize": false,
     "Sectors": ["General"],
@@ -23,7 +23,7 @@
     "Death_Rates":[0.05],
     "Inc_Period": [7],
     "Cure_Days": 14,
-    "Severity": [[0.80,0.25,0.04]],
+    "Severity": [[0.80,0.25,0.05]],
     "UseTran":0,
     "Virus_Params": {
         "Transport" : {"Time":0,"Distance":1}, 
