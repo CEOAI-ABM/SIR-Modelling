@@ -11,4 +11,4 @@ with open("ABM_parameters.json") as f:
 DIR     = "Results\\"+args["Name"]
 os.makedirs(DIR,exist_ok=True)
 
-src.simulate(args)
+src.simulate(args,SAVE=False,LOAD=True)

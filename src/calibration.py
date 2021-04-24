@@ -153,7 +153,7 @@ def sectors_suspectible(pm1,sector=None,RegionName=None,):
  
 	suspectibles['Grocery'] 	= (suspectibles['Commerce']+1.0/(Family_size*sum(Workplace_Params["Commerce"]["T"]))) if pm1.CommON else 0
 	suspectibles['Unemployed'] 	= sector_proportions(pm1,sector='Unemployed')*Family_size #UPDATE LATER
-	suspectibles['Transport'] 	= 0 if Total_Buses ==0 else TN_use_probablity/Total_Buses
+	suspectibles['Transport'] 	= 0 if Total_Buses==0 else TN_use_probablity/Total_Buses
 	
 	Const 						= 4*math.pi*AvgDensity
 	suspectibles['Random'] 		= Const*((Avg_Pop/Const)**(1-CR0))
@@ -203,7 +203,6 @@ def R0(pm1,c=1,RegionName=None):
 
 	EDays 	= np.average(Incubation_Per,weights=AgeDist)
 	R0 		= Rperday*EDays
-	print("Calib",Workplace_Params)
 	print(tabulate(printdata,headers=["Sector","EffContRate","Population","Suspectibles","Rate of sector"]))
 	return R0
 
