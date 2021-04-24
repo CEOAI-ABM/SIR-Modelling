@@ -41,6 +41,7 @@ class Parameters:
 								"General":  {"N":[1.0],"E":[self.Population],"V":[8,2]}
 		}
 		self.Workplace_Params 	= kwargs.get("SecVirus",self.Workplace_Params)
+		self.transmissionModes = ['Home', 'Transport', 'Grocery', 'Unemployed','Random'] + self.sectors 
 		#============================================================================================
 		#--------------------------- Transport Parameters ------------------------------------------
 		#============================================================================================
@@ -120,9 +121,10 @@ class Parameters:
 																			[0.60,0.30,0.10],
 																			[0.40,0.40,0.20],
 																			[0.10,0.40,0.50]])  # Mild, Medicore, Severe between Age Groups
-
+		self.Virus_FullCapRatio 		= kwargs.get("Virus_FullCapRatio", [5/3,5/3,5/3]) #When hopitals are overwhelmed by how much propertion deathrateincreases
 		self.Virus_Prob_ContactTracing = kwargs.get("Virus_Prob_ContactTracing", 0.9)
-
+		self.CT_Efficacy_Workplace	= kwargs.get("CT_E_Workplace",0.6)
+		self.CT_Efficacy_Transport	= kwargs.get("CT_E_Transport",0.3)
 		#Do not change this list during a sim. Can be edited here in parameters only. #Removing a mode will 
 		#permanently stop transmission via that mode for all regions (different from sector lock)
 		self.transmissionModes = ['Home', 'Transport', 'Grocery', 'Unemployed','Random'] + self.sectors 

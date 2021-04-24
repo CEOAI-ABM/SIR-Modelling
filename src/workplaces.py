@@ -11,7 +11,7 @@ class Workplace(object):
 		self.E 	                = E
 		self.V 		            = V
 		self.Counter 			= 0
-		self.Working 			= np.zeros(3*int(self.E))
+		self.Working 			= set()
 		self.Visiting 			= []
 		self.Sector 			= Sector
 

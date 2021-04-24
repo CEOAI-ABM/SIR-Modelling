@@ -59,8 +59,7 @@ def get_TR(pm1,c=1):
 	sectors 		= pm1.sectors.copy()
 	Virus_Params 		= pm1.Virus_Params.copy()
 	Workplace_Params	= pm1.Workplace_Params.copy()
-	Mask_Fraction 		= pm1.Sector_Mask_Fraction.copy() # Fraction of the people in each sector who wear a mask.
-
+	
 	for sector in sectors:
 		Param 	= Workplace_Params[sector]["V"]
 		# Weights = np.multiply(Workplace_Params[sector+"_NumberOfSizei"],Workplace_Params[sector+"_ExpectedPeopleInSizei"])
@@ -70,7 +69,7 @@ def get_TR(pm1,c=1):
 	sectors += ['Home','Transport','Grocery','Unemployed','Random']
 	TR 				= {}
 	for sector in sectors:
-		TR[sector] = effective_contact_rate(Virus_Params[sector]['Time'],Virus_Params[sector]['Distance']*Mask_Fraction[sector],c,pm1)
+		TR[sector] = effective_contact_rate(Virus_Params[sector]['Time'],Virus_Params[sector]['Distance'],c,pm1)
 	
 	#print('complicance rate', pm1.Initial_Compliance_Rate)	
 	# print(TR)

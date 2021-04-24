@@ -6,10 +6,10 @@ from tabulate import tabulate
 from transitions import Machine
 
 # from .utils import strid_to_intid
-# from .contact_tracing import ContactTracing
+from .contact_tracing import ContactTracing
 from .statemachine import AgentStatusA, AgentStateA,TestingState
 
-class person(): 
+class person(AgentStateA,TestingState,ContactTracing): 
 	"""Class for declaring person object
 	Takes in 3 params and 2 optional params
 	Id: Id of the person
@@ -43,8 +43,8 @@ class person():
 							'Id' 		: None, #Id of the Workplace
 							}
 		
-		# if City!= None:
-		# 	self.update_objects(self.City)
+		if City!= None:
+			self.update_objects(self.City)
 		
 		self.VisitingPlaces = {
 		'Commerce' 			: None,
@@ -86,7 +86,7 @@ class person():
 		return deafaultDR
 
 	def get_workplace_obj(self, master=None):
-		return self.City.SectorHolder[self.Work['Sector']][self.Work['SubClass']][self.Work['Id']]
+		return self.City.SectorHolder[self.Work['Sector']].WorkplacePlaceholder[self.Work['SubClass']][self.Work['Id']]
 
 	def get_workers(self,abc=None):
 		return self.get_workplace_obj().Working 
@@ -128,10 +128,9 @@ class person():
 		sectors_temp = pm.sectors.copy()
 		sectors_temp.append(None)
 		tempsector = random.choices(sectors_temp,weights=probablity)[0]
+		self.Work['Sector'] = tempsector
 
 		if tempsector != None:
-			self.Work = {}
-			self.Work['Sector'] = tempsector
 			self.City.EmployedPop += 1
 		else:
 			return
@@ -147,7 +146,7 @@ class person():
 		self.Work['Id'] = random.choice(list(model.WorkplacePlaceholder[self.Work['SubClass']].keys()))  
 		#print('Person {} aquired lock'.format(self.IntID))
 		obj 	= model.WorkplacePlaceholder[self.Work['SubClass']][self.Work['Id']]
-		obj.Working[obj.Counter] = self.Id
+		obj.Working.add(self)
 		obj.Counter +=1
 		model.NWorkers[self.Work['SubClass']] +=1
 				

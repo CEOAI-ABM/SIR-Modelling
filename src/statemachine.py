@@ -33,9 +33,9 @@ class AgentStatusA(object):
 
 	def __remove_from_transport__(self):
 		if self.useTN == True:
-			self.Region.TravellingCitizens.remove(self)
+			self.City.TravellingCitizens.remove(self)
 
-			#print('Person {} removed from travelling list of Region {}. New length = {}'.format(self.IntID, self.Region.Name, len(self.Region.TravellingCitizens)))
+			#print('Person {} removed from travelling list of City {}. New length = {}'.format(self.IntID, self.City.Name, len(self.City.TravellingCitizens)))
 
 	def _remove_(self):
 		"""Remove from workplace and transport list
@@ -79,7 +79,7 @@ class AgentStatusA(object):
 				self.ADDED_BIT = True
 			
 			if self.useTN == True:
-				self.Region.TravellingCitizens.append(self)
+				self.City.TravellingCitizens.add(self)
 			
 	
 	def _left_(self):
@@ -144,7 +144,7 @@ class AgentStatusA(object):
 		self.Status  		= self.status[0]
 		self._entered_()
 		if self.is_Asymptomatic():
-			self.TruthStatus.AFreeP.append(self)
+			self.TruthStatus.AFreeP.add(self)
 			self.Last_Added_Placeholder = 0
 
 	def quarentined(self):
@@ -155,7 +155,7 @@ class AgentStatusA(object):
 			self.__remove_from_placeholder__()
 
 		if self.is_Free():	# If free add to quarentined placeholders
-			self.TruthStatus.AQuarentinedP.append(self)
+			self.TruthStatus.AQuarentinedP.add(self)
 			self.Last_Added_Placeholder = 1 
 
 		
@@ -171,7 +171,7 @@ class AgentStatusA(object):
 		self.show_symptoms()
 
 		if self.__remove_from_placeholder__(): #If person is in city and removal is successful
-			self.TruthStatus.SHospitalizedP.append(self)
+			self.TruthStatus.SHospitalizedP.add(self)
 			self.Last_Added_Placeholder = 3
 
 	def admit_icu(self):
@@ -183,7 +183,7 @@ class AgentStatusA(object):
 		self.show_symptoms()
 
 		if self.__remove_from_placeholder__(): #If person is in city and removal is successful
-			self.TruthStatus.SIcuP.append(self)
+			self.TruthStatus.SIcuP.add(self)
 			self.Last_Added_Placeholder = 4
 
 	def isolate(self):
@@ -195,7 +195,7 @@ class AgentStatusA(object):
 
 		if self.Last_Added_Placeholder != 2:
 			if self.__remove_from_placeholder__(): #If person is in city and removal is successful
-				self.TruthStatus.SIsolatedP.append(self)
+				self.TruthStatus.SIsolatedP.add(self)
 				self.Last_Added_Placeholder = 2
 
 
@@ -206,7 +206,7 @@ class AgentStatusA(object):
 		return self.Status == self.status[0]
 	def is_Quarentined(self):
 		return self.Status == self.status[1]
-	def is_Out_of_Region(self):
+	def is_Out_of_City(self):
 		return self.Status == self.status[2]
 	def is_Hospitalized(self):
 		return self.Status == self.status[3]
@@ -231,7 +231,7 @@ class AgentStateA(AgentStatusA):
 		assert self.State in acceptable_states
 		self.State  		= self.states[1]
 
-		self.TruthStatus.AFreeP.append(self)
+		self.TruthStatus.AFreeP.add(self)
 
 		self.Last_Added_Placeholder = 0
 
@@ -246,7 +246,7 @@ class AgentStateA(AgentStatusA):
 		self.State  		= self.states[3]
 		self.Status   		= self.status[5]
 		if self.__remove_from_placeholder__(): #Removal is succesful, mtlb seher me h
-			self.TruthStatus.RRecoveredP.append(self)
+			self.TruthStatus.RRecoveredP.add(self)
 			self.Last_Added_Placeholder =5 
 
 
@@ -256,7 +256,7 @@ class AgentStateA(AgentStatusA):
 		self.State  		= self.states[4]
 		self.Status 		= self.status[5]
 		if self.__remove_from_placeholder__(): #Removal is succesful, mtlb seher me h
-			self.TruthStatus.RDiedP.append(self)
+			self.TruthStatus.RDiedP.add(self)
 			self.Last_Added_Placeholder = 6 
 
 	def is_Healthy(self):
@@ -296,23 +296,27 @@ class TestingState(object):
 		"""
 		super().__init__()
 		self.state 		= 'Not_tested'
+	def __remove_from_testing_list__(self): 
+		self.City.TestingQueue.remove(self)
 
 	def add_to_TestingQueue(self, PrivateTest=False): 
 		"""Summary
 		"""
-		# This function is for the region to add citizens into testingQueue
+		# This function is for the City to add citizens into testingQueue
 		if PrivateTest == False:
-			if self.state == 'Not_tested':
-				self.Region.TestingQueue.append(self)
+			if self.state != 'Awaiting_Testing' :
+				self.City.TestingQueue.add(self)
+			if self.state == 'Tested_Negative':
+				self.City.TestedP['Negative'].remove(self)
 
-				#print('Region {} added person {}'.format(self.Region.Name, self.IntID))
+				#print('City {} added person {}'.format(self.City.Name, self.IntID))
 
 	#pass type of test
 	def tested_positive_func(self, PrivateTest=False): 
 		"""Summary
 		"""
-		self.Region.TestedP['Positive'].append(self)
-		self.Region.NumTestedPositive.value += 1 
+		self.City.TestedP['Positive'].add(self)
+		self.City.NumTestedPositive.value += 1 
 
 		if PrivateTest == False: 
 			self.__remove_from_testing_list__()
@@ -324,13 +328,12 @@ class TestingState(object):
 	def tested_negative_func(self, PrivateTest=False):
 		"""Summary
 		"""
-		self.Region.TestedP['Negative'].append(self)
+		self.City.TestedP['Negative'].add(self)
 
 		if PrivateTest == False:
 			self.__remove_from_testing_list__()
 
-	def __remove_from_testing_list__(self): 
-		self.Region.TestingQueue.remove(self)
+	
 
 	def __getattribute__(self, item):
 		"""Summary

@@ -1,5 +1,7 @@
 from .workplaces import Sector
 from .person import person
+from .virus import Virus
+from .lockdown import lockdown
 import random
 import numpy as np
 class popdist(object):
@@ -68,15 +70,21 @@ class popdist(object):
 		return self.AgeGroups[Id]
 
 
-class city():
+class city(Virus,lockdown):
 	def __init__(self,pm):
+		
 		self.pm             = pm
 		self.SectorHolder   = {}
 		self.Citizens       = [0]*pm.Population
 		self.Families 		= []
 		self.EmployedPop    = 0
 		self.AgeDist 		= popdist(pm.Population_groups, pm.Population_Dist, pm.Population, sample=True)
-		
+		self.VirusC 		= 0
+		self.Today 			= 0
+		self.CityTestingCap = 0
+		self.ComplianceRate = pm.ComplianceRate
+		self.transmissionModes=pm.transmissionModes
+		super(city, self).__init__(pm)
 	def initialize(self):
 		self.__init_workplaces__()
 		self.__init_citizens__()

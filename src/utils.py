@@ -1,11 +1,7 @@
 from .calibration import sector_proportions
 import timeit
-def get_Numbers(pm):
-	sec_prop = sector_proportions(pm)
-	for sector in pm.sectors:
-		pop = int(sec_prop[sector]*pm.Population)
-		pm.Workplace_Params[sector]["T"] = list(map(lambda x,y: max(int((pop*x)//y),1),pm.Workplace_Params[sector]["N"],pm.Workplace_Params[sector]["E"] ))
-	return pm.Workplace_Params
+import math
+import numpy as np
 
 def timeprinter(tym):
 	a0 = tym.pop(0)
@@ -32,3 +28,24 @@ class timecalc(object):
 	def print_result(self,tym=None):
 		if tym==None:
 			timeprinter(self.tym)
+def get_Numbers(pm):
+	sec_prop = sector_proportions(pm)
+	for sector in pm.sectors:
+		pop = int(sec_prop[sector]*pm.Population)
+		pm.Workplace_Params[sector]["T"] = list(map(lambda x,y: max(int((pop*x)//y),1),pm.Workplace_Params[sector]["N"],pm.Workplace_Params[sector]["E"] ))
+	return pm.Workplace_Params
+def random_suspectibles(Density:float,Population:int,ComplianceRate:float):
+	"""random_suspectibles Returns the number of Suspectile people for random Transmission
+
+	Args:
+		Density (float): density of the population
+		Population (int): count of population
+		ComplianceRate (float): Rate at which people obey orders, i.e entropy. Ranges between 0 to 1
+
+	Returns:
+		int: Number of Suspectible people 
+	"""
+	#print(ComplianceRate)
+	Const 			= 4*math.pi*Density
+	suspectibles 	= Const*((Population/Const)**(1-ComplianceRate))
+	return int(np.round(suspectibles))
