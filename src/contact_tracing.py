@@ -143,6 +143,7 @@ class Testing(object):
 		self.TestingQueue 	= [] 
 
 		self.NumTestedPositive = 0
+		self.PTR 			= 0
 		
 		self.TestedP = {
 		'Positive'	: {},

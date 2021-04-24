@@ -40,7 +40,11 @@ def simulate(args,SAVE=False,LOAD=False):
     City.Citizens[0].infected()
     for i in range(100):
         City.daily_transmissions()
-        print(len(City.AFreeP ))
+        # print(len(City.AFreeP ))
+        print("Day:",City.Today)
+        print(City.print_status())
+        City.Today+=1
+
 
 
     Tym.add_checkpoint(4)

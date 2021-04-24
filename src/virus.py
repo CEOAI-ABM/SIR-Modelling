@@ -23,7 +23,7 @@ class TruthClassStatus(object):
 		self.RRecoveredP 	= set()
 		self.RDiedP 		= set()
 
-	def __str__(self):
+	def print_status(self):
 		table = [["Asymptomatic Free:",			len(self.AFreeP)]
 				,["Asymptomatic Quarentined",	len(self.AQuarentinedP)]
 				,["Symptomatic Isolated:",		len(self.SIsolatedP)]
@@ -206,15 +206,18 @@ class Virus(TruthClassStatus, Testing):
 			float: new deathrate
 		"""
 		multiplier = 1
-		if person.is_Isolation() and len(self.SIsolatedP) > self.Region.Workplaces['Healthcare'].Capacity['Care_Center']:
-			multiplier = self.FullCapRatio[0]
- 
-		elif person.is_Hospitalized() and len(self.SHospitalizedP) > self.Region.Workplaces['Healthcare'].Capacity['Health_Center']:
-			multiplier = self.FullCapRatio[1]
-		
-		elif person.is_ICU() and len(self.SIcuP) > self.Region.Workplaces['Healthcare'].Capacity['Hospital']:
-			multiplier = self.FullCapRatio[2]
-		
+		try:
+			if person.is_Isolation() and len(self.SIsolatedP) > self.Region.Workplaces['Healthcare'].Capacity['Care_Center']:
+				multiplier = self.FullCapRatio[0]
+	
+			elif person.is_Hospitalized() and len(self.SHospitalizedP) > self.Workplaces['Healthcare'].Capacity['Health_Center']:
+				multiplier = self.FullCapRatio[1]
+			
+			elif person.is_ICU() and len(self.SIcuP) > self.Region.Workplaces['Healthcare'].Capacity['Hospital']:
+				multiplier = self.FullCapRatio[2]
+		except:
+			pass
+
 		return deathrate*multiplier
 											 
 	def has_symptoms(self,person,cure:int):
@@ -224,7 +227,7 @@ class Virus(TruthClassStatus, Testing):
 			person (object): person object who has shown symptons
 			cure (int): days after which the person would be cured
 		"""
-		if person.is_Out_of_Region():
+		if person.is_Out_of_City():
 			person.quarentined()
 			return
 		prob_severity 	= person.get_prob_severity(self.ProbSeverity[person.AgeClass])
@@ -237,7 +240,7 @@ class Virus(TruthClassStatus, Testing):
 		if person.is_Quarentined():
 			person.show_symptoms()
 
-		if self.TestingOn:
+		if self.pm.TestingOn:
 			self.put_to_test(person,"Fresh")
 		
 		if cure<0:
@@ -390,10 +393,10 @@ class Virus(TruthClassStatus, Testing):
 			master (object): master object
 		"""
 
-		# self.daily_testing(master)
-		# self.daily_symptoms_check()
-		# self.daily_hospitals_check()
-		# self.daily_pseudo_symptoms()
+		self.daily_testing()
+		self.daily_symptoms_check()
+		self.daily_hospitals_check()
+		self.daily_pseudo_symptoms()
 		master=self
 		temp_AFreeP 		= self.AFreeP.copy()
 		temp_AQuarentinedP 	= self.AQuarentinedP.copy()
@@ -429,6 +432,6 @@ class Virus(TruthClassStatus, Testing):
 
 			self.__random_transmissions__(person_obj, master)
 			
-		self.Symptom_placeholder.append({})
-		self.Deaths_Placeholder.append({})
-		self.Recovers_Placeholder.append({})
+		self.Symptom_placeholder.append(set())
+		self.Deaths_Placeholder.append(set())
+		self.Recovers_Placeholder.append(set())

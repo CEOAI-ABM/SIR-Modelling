@@ -41,24 +41,10 @@ class AgentStatusA(object):
 		"""Remove from workplace and transport list
 		"""
 		if self.ADDED_BIT:
-			obj = self.get_workplace_obj(self.master)
+			obj = self.get_workplace_obj()
 			if obj !=None:
 				self.buffer.append('_remove_')
-				lock = obj.get_lock(self.master)
-				lock.acquire()
-				try:
-					indx = list(obj.Working).index(self.IntID)
-				except:
-				 	#print(self.buffer)
-				# 	#raise
-				 	lock.release()
-				 	self.ADDED_BIT = False
-				 	self.__remove_from_transport__()
-				 	return
-
-				obj.Working[indx] = obj.Working[obj.Counter.value-1]
-				obj.Counter.value -=1
-				lock.release()
+				obj.Working.remove(self) 
 			self.ADDED_BIT = False
 			
 			self.__remove_from_transport__()
@@ -67,15 +53,11 @@ class AgentStatusA(object):
 		"""Add to workplace and transport list
 		"""
 		if ~self.ADDED_BIT:
-			obj = self.get_workplace_obj(self.master)
+			obj = self.get_workplace_obj()
 			if obj != None:
 				if obj.Working!=None:
 					self.buffer.append('_add_')
-					lock = obj.get_lock(self.master)
-					lock.acquire()
-					obj.Working[obj.Counter.value] = self.IntID
-					obj.Counter.value +=1
-					lock.release()
+					obj.Working.add(self) 
 				self.ADDED_BIT = True
 			
 			if self.useTN == True:
@@ -305,7 +287,7 @@ class TestingState(object):
 		# This function is for the City to add citizens into testingQueue
 		if PrivateTest == False:
 			if self.state != 'Awaiting_Testing' :
-				self.City.TestingQueue.add(self)
+				self.City.TestingQueue.append(self)
 			if self.state == 'Tested_Negative':
 				self.City.TestedP['Negative'].remove(self)
 
