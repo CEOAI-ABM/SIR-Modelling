@@ -1,5 +1,5 @@
 {
-    "Name": "Test1",
+    "Name": "R03",
     "Population": 100000,
     "Init_Inf": 1,
     
@@ -22,7 +22,7 @@
     "R0": 3.0,
     "Death_Rates":[0.05],
     "Inc_Period": [7],
-    "Cure_Days": 14,
+    "Cure_Days": 1,
     "Severity": [[0.80,0.25,0.05]],
     "UseTran":0,
     "Virus_Params": {
@@ -32,5 +32,6 @@
         "Unemployed": {"Time":0,"Distance":1},
         "Random"	: {"Time":0,"Distance":2}
         },
-    "Commerce_On": false
+    "Commerce_On": false,
+    "Random_Factor":0
 }

@@ -4,6 +4,8 @@ from .virus import Virus
 from .lockdown import lockdown
 import random
 import numpy as np
+import pandas as pd
+import copy
 class popdist(object):
 	def __init__(self, Population_groups, Population_Dist, Population, sample=False):
 		"""Initialized Population Distribution object
@@ -110,7 +112,7 @@ class city(Virus,lockdown):
 		pop 					= self.pm.Population
 		EFamilyMembers 			= self.pm.Family_size[0] #Get Param
 		VarFamilyMembers 		= self.pm.Family_size[1] #Get Param
-		membersaray 			= np.random.normal(loc=EFamilyMembers,scale=VarFamilyMembers,size=int(self.pm.Population/(EFamilyMembers-1)))  
+		membersaray 			= np.random.normal(loc=EFamilyMembers,scale=VarFamilyMembers*self.pm.RF,size=int(self.pm.Population/(EFamilyMembers-1)))  
 		membersaray 			= np.round(membersaray).astype(np.int)
 		
 		citizenslist 			= self.Citizens#list(self.Citizens.values())
@@ -120,7 +122,7 @@ class city(Virus,lockdown):
 		while pop_accounted<pop:
 			members = membersaray[family_number]
 			while members<=0:
-				members = np.round((np.random.normal(loc=EFamilyMembers,scale=VarFamilyMembers))).astype(np.int)
+				members = np.round((np.random.normal(loc=EFamilyMembers,scale=VarFamilyMembers*self.pm.RF))).astype(np.int)
 			
 			if pop_accounted+members>=pop:
 				members = pop-pop_accounted
@@ -134,3 +136,10 @@ class city(Virus,lockdown):
 
 			pop_accounted+=members
 			family_number+=1
+	def citizen_register(self):
+		headers = ['ID','Family','Sector','SubClass','State','Status', 'Testing_State','Infected','Symptomatic','Recovered','Died']
+		register = np.empty(shape=(self.pm.Population,len(headers)),dtype=object)
+		for i, person_obj in enumerate(self.Citizens):
+			obj = copy.copy(person_obj)
+			register[i] = [obj.Id,obj.Family,obj.Work['Sector'],obj.Work['SubClass'], obj.State,obj.Status,obj.state,obj.History['Infected'],obj.History['Symptomatic'],obj.History['Recovered'],obj.History['Died']]
+		return pd.DataFrame(register,columns=headers)

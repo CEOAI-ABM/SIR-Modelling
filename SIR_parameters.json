@@ -1,8 +1,9 @@
 {
-    "Name": "Test",
+    "Name": "R03",
     "Population": 100000,
     "Init_Inf": 1,
     "Inc_Period": 7,
+    "Cure_Period":14,
     "R0": 3.0,
     "Death_Rate": 0.05,
     "Days": 100

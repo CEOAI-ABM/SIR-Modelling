@@ -85,7 +85,7 @@ def run(City,pm,C,SAVEDIR):
     printdata[0]        = [0,0,0,0,0,0,0,0,0,0,0,0] 
     City.updateratetransmissions(pm,c=C)
 
-    City.Citizens[0].infected()
+    City.Citizens[0].infected(City.Today)
     for i in range(pm.SIMULATION_DAYS):
         City.daily_transmissions()
         # print(len(City.AFreeP ))
@@ -146,9 +146,9 @@ def run(City,pm,C,SAVEDIR):
             # f.write(tabulate(data['printdata'], headers=data_cols))
             # f.close()
             
-            # array, header, df_register = region.populate_citizen_register(SendDf=True)
+            df_register = City.citizen_register()
 
-            # df_register.to_csv(SAVEDIR+'register.csv', index=False)   
+            df_register.to_csv(SAVEDIR+'register.csv', index=False)   
 
             # Save results_df
             results_df = pd.DataFrame(data['printdata'], columns = data_cols)

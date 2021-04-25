@@ -8,7 +8,7 @@ import src
 
 with open("ABM_parameters.json") as f:
     args = json.load(f)
-DIR     = "Results\\"+args["Name"]
+DIR     = "Results\\ABM_{}".format(args["Name"])
 os.makedirs(DIR,exist_ok=True)
 
 src.simulate(args,DIR,SAVE=True,LOAD=False)

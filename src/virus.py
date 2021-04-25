@@ -137,10 +137,10 @@ class Virus(TruthClassStatus, Testing):
 		"""
 		if person.is_Out_of_City()==False:
 			if person.is_Healthy() == True :
-				Symptom  = int(np.random.normal(self.Esymptomstime[person.AgeClass],self.Esymptomstime[person.AgeClass]/3))
+				Symptom  = int(np.random.normal(self.Esymptomstime[person.AgeClass],self.Esymptomstime[person.AgeClass]/3*self.pm.RF))
 				Symptom  = max(0,Symptom)
 				self.Symptom_placeholder[Symptom].add(person)
-				person.infected()
+				person.infected(self.Today)
 				self.RepoRateSum+=1
 				return 1
 			else:
@@ -235,10 +235,10 @@ class Virus(TruthClassStatus, Testing):
 		deathrate = self.apply_dr_multiplier(person, deathrate)
 
 		choice = random.choices([person.quarentined, person.hospitalized, person.admit_icu], weights=prob_severity)[0]
-		choice() 
+		choice(self.Today) 
 		
 		if person.is_Quarentined():
-			person.show_symptoms()
+			person.show_symptoms(self.Today)
 
 		if self.pm.TestingOn:
 			self.put_to_test(person,"Fresh")
@@ -262,7 +262,7 @@ class Virus(TruthClassStatus, Testing):
 		today_symptoms = self.Symptom_placeholder.pop(0)
 
 		#print('In region {}, {} people are added to testing list'.format(self.Name, len(today_symptoms)))
-		curearray 	= np.random.normal(self.CureTime,self.CureTime/3,size=len(today_symptoms))
+		curearray 	= np.random.normal(self.CureTime,self.CureTime/3*self.pm.RF,size=len(today_symptoms))
 		for i,person in enumerate(today_symptoms):
 			self.has_symptoms(person,int(curearray[i]))
 
@@ -271,11 +271,11 @@ class Virus(TruthClassStatus, Testing):
 		"""
 		today_cured = self.Recovers_Placeholder.pop(0)
 		for person in today_cured:	
-			person.recover()
+			person.recover(self.Today)
 
 		today_died  = self.Deaths_Placeholder.pop(0)
 		for person in today_died:	
-			person.die()
+			person.die(self.Today)
 
 	def daily_pseudo_symptoms(self):
 		"""

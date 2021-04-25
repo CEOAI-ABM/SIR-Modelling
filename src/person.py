@@ -27,7 +27,7 @@ class person(AgentStateA,TestingState,ContactTracing):
 		self.isAlien 		= isAlien
 		self.City           = City
 		self.GroceryPlace 	= None 
-
+		self.History 		= {'Infected':-1,'Symptomatic':-1,'Recovered':-1,'Died':-1}
 		self.spreadsTo		= {mode: [] for mode in pm.transmissionModes} if pm is not None else {}
 
 		#self.TravelledIn 	= {

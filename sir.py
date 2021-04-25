@@ -7,7 +7,7 @@ import pandas as pd
 
 with open("SIR_parameters.json") as f:
     args = json.load(f)
-DIR     = "Results\\"+args["Name"]
+DIR     = "Results\\SIR_{}".format(args["Name"])
 os.makedirs(DIR,exist_ok=True)
 
 POP     = args["Population"]
@@ -41,7 +41,7 @@ RES     = spi.odeint(diff_eqs,INPUT,t_range)
 
 
 plt.subplot(211)
-plt.plot(RES[:,0]*POP, '-g', label='Susceptibles')
+plt.plot(RES[:,0]*POP, '-g', label='Suspectible')
 plt.plot(RES[:,1]*POP, '-m', label='Infectious')
 plt.plot(RES[:,2]*POP, '-b', label='Recoveries')
 plt.plot(RES[:,3]*POP, '-r', label='Deaths')
@@ -58,8 +58,8 @@ plt.xlabel('Timestep')
 plt.ylabel('Infectious')
 # plt.show()
 
-df = pd.DataFrame(np.round(RES*POP),columns=["Suseptibles",'Infected','Recovered',"Deaths"])
-df.index.name = "Days"
+df = pd.DataFrame(np.round(RES*POP),columns=["Suspectible",'Infected','Recovered',"Died"])
+df.index.name = "Day"
 
 plt.savefig(DIR+"//graph.png")
 json.dump(args,open(DIR+"//params.json", 'w'),indent = 4)

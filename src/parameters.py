@@ -197,4 +197,4 @@ class Parameters:
 		self.IFP                	= kwargs.get("StartIFP", 0.001)	
 		self.CommON 				= kwargs.get("Commerce_On", True)	
 		self.Sim_Name 				= kwargs.get("Name", 'Test')	
-	
+		self.RF						= kwargs.get("Random_Factor", 1)

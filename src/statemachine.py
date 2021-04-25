@@ -129,7 +129,7 @@ class AgentStatusA(object):
 			self.TruthStatus.AFreeP.add(self)
 			self.Last_Added_Placeholder = 0
 
-	def quarentined(self):
+	def quarentined(self,DAY):
 		acceptable_states	= [self.status[0],self.status[1],self.status[2]]
 		assert self.Status in acceptable_states
 		
@@ -144,25 +144,25 @@ class AgentStatusA(object):
 		self.Status  		= self.status[1]
 		self._remove_()
 
-	def hospitalized(self):
+	def hospitalized(self,DAY):
 		acceptable_states	= [self.status[0],self.status[1]]
 		assert self.Status in acceptable_states
 		self.Status  		= self.status[3]
 		self._remove_()
 
-		self.show_symptoms()
+		self.show_symptoms(DAY)
 
 		if self.__remove_from_placeholder__(): #If person is in city and removal is successful
 			self.TruthStatus.SHospitalizedP.add(self)
 			self.Last_Added_Placeholder = 3
 
-	def admit_icu(self):
+	def admit_icu(self,DAY):
 		acceptable_states	= [self.status[0],self.status[1],self.status[3]]
 		assert self.Status in acceptable_states
 		self.Status  		= self.status[4]
 		self._remove_()
 
-		self.show_symptoms()
+		self.show_symptoms(DAY)
 
 		if self.__remove_from_placeholder__(): #If person is in city and removal is successful
 			self.TruthStatus.SIcuP.add(self)
@@ -208,7 +208,7 @@ class AgentStateA(AgentStatusA):
 		self.State 			= self.states[0]
 		self.TruthStatus 	= None
 		
-	def infected(self):
+	def infected(self,DAY):
 		acceptable_states	= [self.states[0]]
 		assert self.State in acceptable_states
 		self.State  		= self.states[1]
@@ -216,13 +216,16 @@ class AgentStateA(AgentStatusA):
 		self.TruthStatus.AFreeP.add(self)
 
 		self.Last_Added_Placeholder = 0
+		self.History["Infected"] = DAY
 
-	def show_symptoms(self):
+	def show_symptoms(self,DAY):
 		acceptable_states	= [self.states[1],self.states[2]]
 		assert self.State in acceptable_states
 		self.State  		= self.states[2]
+		self.History["Symptomatic"] = DAY
 
-	def recover(self):
+
+	def recover(self,DAY):
 		acceptable_states	= [self.states[2]]
 		assert self.State in acceptable_states
 		self.State  		= self.states[3]
@@ -230,9 +233,10 @@ class AgentStateA(AgentStatusA):
 		if self.__remove_from_placeholder__(): #Removal is succesful, mtlb seher me h
 			self.TruthStatus.RRecoveredP.add(self)
 			self.Last_Added_Placeholder =5 
+		self.History["Recovered"] = DAY
+		self.History["Died"] 	  = -1
 
-
-	def die(self):
+	def die(self,DAY):
 		acceptable_states	= [self.states[2]]
 		assert self.State in acceptable_states
 		self.State  		= self.states[4]
@@ -240,7 +244,9 @@ class AgentStateA(AgentStatusA):
 		if self.__remove_from_placeholder__(): #Removal is succesful, mtlb seher me h
 			self.TruthStatus.RDiedP.add(self)
 			self.Last_Added_Placeholder = 6 
-
+		self.History["Recovered"] = -1
+		self.History["Died"] 	  = DAY
+		
 	def is_Healthy(self):
 		return self.State == self.states[0]
 	def is_Asymptomatic(self):

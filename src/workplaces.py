@@ -39,13 +39,13 @@ class Workplace(object):
 	'''
 
 class Sector(object):
-	def __init__(self, params,city=None,Name=None):
+	def __init__(self, params,city=None,Name=None,RF=1):
 		super(Sector, self).__init__()
 		self.T 		        = params[0] 
 		self.E 	            = params[1]
 		self.V 				= params[2]
 		self.TSubClasses	= len(self.T)
-
+		self.RF 			= RF
 		
 		self.City 			= city
 		self.Sec_Name		= Name
@@ -65,7 +65,7 @@ class Sector(object):
 		Id = 0
 		self.IndexHolder.append(Id)
 		for subclass in range(self.TSubClasses):
-			self.NWorkplaces[subclass] = np.round(np.random.normal(self.T[subclass],self.T[subclass]/6*0)).astype(np.int)			
+			self.NWorkplaces[subclass] = np.round(np.random.normal(self.T[subclass],self.T[subclass]/6*self.RF)).astype(np.int)			
 			
 			for workplace in range(np.sum(self.NWorkplaces[:subclass]),np.sum(self.NWorkplaces[:(subclass+1)])):
 				new_workplace = Workplace(self.Sec_Name,subclass,workplace,self.E[subclass],self.V[subclass], self)
