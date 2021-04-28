@@ -5,17 +5,9 @@ import json
 import os
 import pandas as pd
 
-with open("SIR_parameters.json") as f:
-    args = json.load(f)
-
-Nos = 9
-R0s = np.linspace(1,4,Nos)
-for x in range(Nos):
-    args["Name"] = R0s[x]
-    args["R0"] = R0s[x]
+def run(args):
     DIR     = "Results\\SIR_{}".format(args["Name"])
     os.makedirs(DIR,exist_ok=True)
-
     POP     = args["Population"]
     R0      = args["R0"]
     DR      = args["Death_Rate"]
@@ -70,3 +62,15 @@ for x in range(Nos):
     plt.savefig(DIR+"//graph.png")
     json.dump(args,open(DIR+"//params.json", 'w'),indent = 4)
     df.to_csv(DIR+"//output.csv")
+
+
+with open("SIR_parameters.json") as f:
+    args = json.load(f)
+
+Nos = 9
+R0s = np.linspace(1,4,Nos)
+for x in range(Nos):
+    args["Name"] = R0s[x]
+    args["R0"] = R0s[x]
+# run(args)
+    

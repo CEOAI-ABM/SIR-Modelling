@@ -1,20 +1,16 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-
-Nos = 9
-R0 = np.linspace(1,4,Nos)
-for i in R0:
-    NAME = str(i)
-
+import os
+def plot(NAME,SAVE_DIR):
     ABM_DIR = "Results\\ABM_{}".format(NAME)
     SIR_DIR = "Results\\SIR_{}".format(NAME)
-
+   
     abm_df = pd.read_csv(ABM_DIR+"\\sir_df.csv")
     sir_df = pd.read_csv(SIR_DIR+"\\output.csv")
     cit_df = pd.read_csv(ABM_DIR+'\\register.csv')
 
-    print(abm_df.columns)
+
     cols = ['Suspectible','Infected','Recovered']
     fig = plt.figure(figsize=(10,5*len(cols)))
     for i,colname in enumerate(cols):
@@ -24,8 +20,9 @@ for i in R0:
         plt.legend(['ABM','SIR'])
         plt.xlabel('Days')
         plt.ylabel(colname)
-        # plt.title("Days vs "+colname)
         plt.grid()
+        plt.title("For R0="+NAME) if i==0 else 2==3
+    plt.savefig(SAVE_DIR+"{}_1.png".format(NAME))
     cols = ['Infected','Recovered','Died']
     fig = plt.figure(figsize=(10,5*len(cols)))
     for i,colname in enumerate(cols):
@@ -36,6 +33,17 @@ for i in R0:
         plt.plot(sir_df['Day'],sir_df[colname],label='SIR_{}'.format(colname))
         plt.xlabel('Days')
         plt.ylabel(colname)
+        plt.title("For R0="+NAME) if i==0 else 2==3
+        plt.grid()    
     plt.legend()
-    plt.grid()
-    plt.show()
+    plt.savefig(SAVE_DIR+"{}_2.png".format(NAME))
+    # plt.show()
+SAVE_DIR = "Plots\\Paper"
+os.makedirs(SAVE_DIR,exist_ok=True)
+Nos = 9
+R0 = np.linspace(1,4,Nos)
+for i in R0:
+    NAME = str(i)
+    plot(NAME,SAVE_DIR+"\\")
+# plot("Modified_Distributions")
+    

@@ -77,7 +77,7 @@ class Virus(TruthClassStatus, Testing):
 		self.ProbSeverity 				= pm.Virus_ProbSeverity 
 
 		# Day wise placeholder
-		self.Symptom_placeholder 		= [ set() for i in range(30) ]
+		self.Symptom_placeholder 		= [ set() for i in range(60) ]
 		self.Recovers_Placeholder 		= [ set() for i in range(60) ]
 		self.Deaths_Placeholder 		= [ set() for i in range(60) ]
 		
@@ -137,9 +137,16 @@ class Virus(TruthClassStatus, Testing):
 		"""
 		if person.is_Out_of_City()==False:
 			if person.is_Healthy() == True :
-				Symptom  = int(np.random.normal(self.Esymptomstime[person.AgeClass],self.Esymptomstime[person.AgeClass]/3*self.pm.RF))
+				# Symptom  = int(np.random.normal(self.Esymptomstime[person.AgeClass],self.Esymptomstime[person.AgeClass]/3*self.pm.RF))
+				Symptom  = np.random.geometric(p=1/self.Esymptomstime[person.AgeClass], size=1)[0]
 				Symptom  = max(0,Symptom)
-				self.Symptom_placeholder[Symptom].add(person)
+				# print(Symptom)
+				try:
+					self.Symptom_placeholder[Symptom].add(person)
+				except:
+					self.Symptom_placeholder[-1].add(person)
+					print(Symptom,self.Esymptomstime[person.AgeClass])
+					# raise
 				person.infected(self.Today)
 				self.RepoRateSum+=1
 				return 1
@@ -260,7 +267,8 @@ class Virus(TruthClassStatus, Testing):
 		today_symptoms = self.Symptom_placeholder.pop(0)
 
 		#print('In region {}, {} people are added to testing list'.format(self.Name, len(today_symptoms)))
-		curearray 	= np.random.normal(self.CureTime,self.CureTime/3*self.pm.RF,size=len(today_symptoms))
+		curearray   = np.random.geometric(p=1/self.CureTime, size=len(today_symptoms))
+		# curearray 	= np.random.normal(self.CureTime,self.CureTime/3*self.pm.RF,size=len(today_symptoms))
 		for i,person in enumerate(today_symptoms):
 			self.has_symptoms(person,int(curearray[i]))
 
@@ -292,36 +300,6 @@ class Virus(TruthClassStatus, Testing):
 
 			self.put_to_test(person, "Fresh")
 			
-	def check_infected_list(self, master):
-		#print('Region {} on day {} InfectedList = {}'.format(self.Name, self.Today, self.InfectedList[:self.InfectedSize.value]))		
-
-		for i in range(self.InfectedSize.value):
-			if self.InfectedList[i] == 0:
-				continue
-
-			# WORKAROUND FOR ICT
-			try:
-				person_obj = self.get_person_obj(Int_ID=self.InfectedList[i])
-			except:
-				#print('Skipping person')
-				continue
-				raise
-
-			home_region_locked = person_obj.Region.Locked.value
-			work_region_locked = master.Regions[person_obj.Work['Region']].Locked.value if person_obj.Work['Region'] != None else 0	
-
-			if work_region_locked == 0 and home_region_locked == 0:
-
-				sector = person_obj.Work['Sector'] 
-				if sector != None: 
-					sectorIndex = sector
-					if master.SectorLockStatus[sectorIndex] == 0: # Sector should not be locked. 
-						self.__getattribute__("gets_virus")(person_obj)
-
-				else:
-					self.__getattribute__("gets_virus")(person_obj)
-				
-		self.InfectedSize.value = 0
 
 	def __workplace_transmissions__(self, person_obj, master):
 		sector = person_obj.Work['Sector']
