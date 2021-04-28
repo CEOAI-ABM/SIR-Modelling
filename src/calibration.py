@@ -185,8 +185,10 @@ def R0(pm1,c=1,RegionName=None):
 
 	sectors += ['Home','Transport','Grocery','Unemployed','Random']
 	Rperday 		= 0
-	Rsector = {}
-	printdata = []
+	Rsector 		= {}
+	printdata 		= []
+	EDays 			= np.average(Incubation_Per,weights=AgeDist)
+	
 	for sector in sectors:
 		ecr = effective_contact_rate(Virus_Params[sector]['Time'],Virus_Params[sector]['Distance'],c,pm1)
 		pop =(proportions[sector])
@@ -198,11 +200,15 @@ def R0(pm1,c=1,RegionName=None):
 		Rsector[sector] = ecr*pop*susp
 		
 		Rperday += Rsector[sector] 
-		printdata.append([sector+":",np.round(ecr,decimals=2),np.round(pop,decimals=2),np.round(susp,decimals=2),np.round(Rsector[sector],decimals=2)])
+		Rval = Rsector[sector]*EDays  
+		printdata.append([sector+":",np.round(ecr,decimals=2),np.round(pop,decimals=2),np.round(susp,decimals=2),np.round(Rsector[sector],decimals=2),np.round(Rval,decimals=2)])
 
-	EDays 	= np.average(Incubation_Per,weights=AgeDist)
+	
 	R0 		= Rperday*EDays
-	print(tabulate(printdata,headers=["Sector","EffContRate","Population","Suspectibles","Rate of sector"]))
+	c = pm1.Virus_R0/R0
+	for i in range(len(printdata)):
+		printdata[i][-1] *= c 
+	print(tabulate(printdata,headers=["Sector","EffContRate","Population","Suspectibles","Rate of sector","Rval"]))
 	return R0
 
 def calibrate(pm1,R0_val=None):

@@ -84,13 +84,14 @@ def run(City,pm,C,SAVEDIR):
     df_transmissions 	= pd.DataFrame()
     printdata[0]        = [0,0,0,0,0,0,0,0,0,0,0,0] 
     City.updateratetransmissions(pm,c=C)
-
+    print(City.TR)
+    print(list(map(lambda x:City.TR[x]*pm.Population,City.TR.keys())))
     City.Citizens[0].infected(City.Today)
     for i in range(pm.SIMULATION_DAYS):
         City.daily_transmissions()
         # print(len(City.AFreeP ))
-        print("Day:",City.Today)
-        print(City.print_status())
+        print("Day:",City.Today, "R0:",pm.Virus_R0)
+        # print(City.print_status())
         City.Today+=1
         
         TAF = len(City.AFreeP)
@@ -133,11 +134,12 @@ def run(City,pm,C,SAVEDIR):
         data['negative_tested']	= feed_dict[:,7]
         data['Cumulative']		= feed_dict[:,8]
 
-        sir['Day'] = feed_dict[:,0]
-        sir['Suspectible'] = pm.Population - feed_dict[:,8]
-        sir['Infected']    = feed_dict[:,1]
-        sir['Recovered']   = feed_dict[:,4]+feed_dict[:,2]
-        sir['Died']        = feed_dict[:,3]
+        temp = np.array(printdata)
+        sir['Day'] = temp[:,0]
+        sir['Suspectible'] = pm.Population - temp[:,1]
+        sir['Infected']    = temp[:,2]
+        sir['Recovered']   = np.sum(temp[:,3:8],axis=1)
+        sir['Died']        = temp[:,8]
         if SAVE_TO_FILE:
             # f = open(SAVEDIR+"log.txt", "w")
             # #f.write(tabulate(pm.table))

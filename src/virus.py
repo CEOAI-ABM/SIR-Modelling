@@ -232,7 +232,7 @@ class Virus(TruthClassStatus, Testing):
 			return
 		prob_severity 	= person.get_prob_severity(self.ProbSeverity[person.AgeClass])
 		deathrate 	 	= person.get_death_rate(self.AgeDR[person.AgeClass])
-		deathrate = self.apply_dr_multiplier(person, deathrate)
+		deathrate 		= self.apply_dr_multiplier(person, deathrate)
 
 		choice = random.choices([person.quarentined, person.hospitalized, person.admit_icu], weights=prob_severity)[0]
 		choice(self.Today) 
@@ -247,14 +247,12 @@ class Virus(TruthClassStatus, Testing):
 			cure = 0
 		
 		deathrate = self.apply_dr_multiplier(person,deathrate)
-
-		sampledeaths = random.choices([True, False],[deathrate,1-deathrate],k=cure)
-		# Died with probablity death rate, True if died on that day
-		try: # Look for index of True , if present died before cure
-			deathday = sampledeaths.index(True)
-			self.Deaths_Placeholder[deathday].add(person) #Append Death Day
-		except ValueError: 
-			self.Recovers_Placeholder[cure].add(person) # If not found, all is false, append cureday
+		deathday  = np.random.geometric(p=deathrate, size=1)[0]
+		
+		if cure<deathday:
+			self.Recovers_Placeholder[cure].add(person)
+		else:
+			self.Deaths_Placeholder[deathday].add(person)
 		
 	def daily_symptoms_check(self):
 		"""Checks for people whose symptoms have shown today. These people either will go to ICU,Hospital or remain at home
@@ -282,7 +280,8 @@ class Virus(TruthClassStatus, Testing):
 		Samples people at random to show pseudo symptoms (ILI but not Covid). Testing policy will be same as that for
 		real person since it isn't known beforehand whether it is a Covid case or not
 		"""
-
+		if self.pm.TestingOn==False:
+			return
 		#today_pseudo_symptoms_idx = random.sample(list(self.Citizens), k=int(self.PseudoSymptoms_Prob*len(self.Citizens)))
 		today_pseudo_symptoms = random.sample(self.Citizens, k=int(self.PseudoSymptoms_Prob*len(self.Citizens)))
 		for person in today_pseudo_symptoms:
