@@ -11,7 +11,7 @@
         "Education":    {"N":[1.0],"E":[80],"V":[8,3]},
         "Commerce":     {"N":[1.0],"E":[100],"V":[4,3]},
         "Office":       {"N":[1.0],"E":[100],"V":[4,3]},
-        "Healthcare":   {"N":[1.0],"E":[250],"V":[14,2.2]}
+        "Healthcare":   {"N":[1.0],"E":[250],"V":[14,5]}
     },
     "Family_Size": [5,2],
     "Density": 327,
@@ -37,7 +37,7 @@
         "Unemployed": {"Time":0,"Distance":1},
         "Random"	: {"Time":0,"Distance":2}
         },
-    "Commerce_On": false,
+    "Commerce_On": true,
     "PPurchase": 0.2,
     "Random_Factor":1,
     "TestingOn":false

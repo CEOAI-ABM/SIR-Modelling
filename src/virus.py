@@ -359,8 +359,12 @@ class Virus(TruthClassStatus, Testing):
 			return
 		
 		suspectibles 	= random_suspectibles(self.pm.Density,self.pm.Population,self.ComplianceRate)
-		Regioners 		= random.sample(self.Citizens,k=suspectibles)	
-		self.spread_virus(person_obj, self.TR['Random'], Regioners, 'Random', master)
+		n 				= suspectibles
+		p 				= self.TR['Random']
+		NumInfected 	= np.random.binomial(n,p)
+		
+		Regioners 		= random.sample(self.Citizens,k=NumInfected)	
+		self.spread_virus(person_obj, 1.0, Regioners, 'Random', master)
 
 	def daily_transmissions(self, master=None):
 		"""Daily Transmission Control Sub-routing, this is the important subroutine which is responsible for spreading the virus in the city
