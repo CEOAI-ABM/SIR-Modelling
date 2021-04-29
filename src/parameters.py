@@ -87,9 +87,8 @@ class Parameters:
 		#============================================================================================
 		#-------------------------- Transaction  Parameters ------------------------------------------
 		#============================================================================================
-		self.Transaction_ProbablityOfPurchase 	= kwargs.get("ProbPurchase", 0.5)
+		self.PPurchase 	= kwargs.get("PPurchase", 0.5)
 		self.Transaction_MinGroceryRequirement	= 19
-		self.Transaction_zip =[self.Transaction_ProbablityOfPurchase, self.Transaction_MinGroceryRequirement]
 		#============================================================================================
 		#-------------------------- Virus  Parameters ------------------------------------------
 		#============================================================================================

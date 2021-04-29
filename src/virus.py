@@ -255,11 +255,10 @@ class Virus(TruthClassStatus, Testing):
 		
 		deathrate = self.apply_dr_multiplier(person,deathrate)
 		deathday  = np.random.geometric(p=deathrate, size=1)[0]
-		
 		if cure<deathday:
-			self.Recovers_Placeholder[cure].add(person)
+			self.Recovers_Placeholder[min(cure,59)].add(person)
 		else:
-			self.Deaths_Placeholder[deathday].add(person)
+			self.Deaths_Placeholder[min(deathday,59)].add(person)
 		
 	def daily_symptoms_check(self):
 		"""Checks for people whose symptoms have shown today. These people either will go to ICU,Hospital or remain at home
@@ -342,10 +341,9 @@ class Virus(TruthClassStatus, Testing):
 	def __transaction_transmissions__(self, person_obj, master):
 		sectorIndex = 'Grocery'
 
-		if master.SectorLockStatus[sectorIndex] == 0: # Sector should not be locked
-
+		if master.SectorLockStatus[sectorIndex] == 0: # Sector should not be locke
 			GroceryPlace  	= person_obj.GroceryPlace
-			GroceryContacts = GroceryPlace.Visiting + GroceryPlace.Working[:GroceryPlace.Counter.value]
+			GroceryContacts = GroceryPlace.Visiting.union(GroceryPlace.Working)
 			self.spread_virus(person_obj, self.TR['Grocery'], GroceryContacts, 'Grocery', master=master)
 
 	def __quarantine_transmissions__(self, person_obj, master):

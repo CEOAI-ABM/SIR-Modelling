@@ -21,11 +21,13 @@ if __name__ == '__main__':
     with open("ABM_parameters.json") as f:
         args = json.load(f)
 
-    # Nos = 9
-    # R0 = np.linspace(1,4,Nos)
-    # pool = mp.Pool(processes=8)
-    # for i in range(Nos):
-    #     pool.apply_async(do, args = (args,R0[i]))
-    # pool.close()
-    # pool.join()
-    do_normal(args)
+    if args["Name"] == "MULTI":
+        Nos = 9
+        R0 = np.linspace(1,4,Nos)
+        pool = mp.Pool(processes=8)
+        for i in range(Nos):
+            pool.apply_async(do, args = (args,R0[i]))
+        pool.close()
+        pool.join()
+    else:
+        do_normal(args)

@@ -86,7 +86,7 @@ class person(AgentStateA,TestingState,ContactTracing):
 		return deafaultDR
 
 	def get_workplace_obj(self, master=None):
-		return self.City.SectorHolder[self.Work['Sector']].WorkplacePlaceholder[self.Work['SubClass']][self.Work['Id']]
+		return self.City.SectorHolder[self.Work['Sector']].WorkplacePlaceholder[self.Work['SubClass']][self.Work['Id']] if self.Work['Sector'] is not None else None
 
 	def get_workers(self,abc=None):
 		return self.get_workplace_obj().Working 

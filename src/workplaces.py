@@ -12,7 +12,7 @@ class Workplace(object):
 		self.V 		            = V
 		self.Counter 			= 0
 		self.Working 			= set()
-		self.Visiting 			= []
+		self.Visiting 			= set()
 		self.Sector 			= Sector
 
 	def print_about(self,get=False):
@@ -136,40 +136,40 @@ class Transactions(object):
 	def __init__(self, pm):
 		pass
 
-	def daily_transactions(self):
-		num_families = len(self.Families) #change this to freeFamilies later 		
-		shoppingFamilies = np.random.randint(0, num_families, size=int(num_families*self.ProbablityOfPurchase))
+	def daily_transactions(self,sector='Commerce'):
+		model = self.SectorHolder[sector]
+		weights = list(np.multiply(model.NWorkplaces,model.E))
 
-		for i in shoppingFamilies:
-			if len(self.Families[i])==0:
-				continue
-
-			shopper = random.choice(self.Region.Families[i])
-
-			#Choose class 
-			weights = [num_plc*num_peop for num_plc, num_peop  in zip(self.Workplaces['Commerce'].Number_Expectation, self.Workplaces['Commerce'].Daily_People_Expectation)]
-			subclass = int(random.choices(list(range(0, len(self.Workplaces['Commerce'].Number_Expectation))), weights=weights)[0])
-			id = random.choice(list(self.Workplaces['Commerce'].WorkplacePlaceholder[subclass].keys()))
+		# shoppingFamilies = np.random.randint(0, num_families, size=int(num_families*self.pm.PPurchase))
+		num_people 	= int((self.pm.Population//self.pm.Family_size[0])*self.pm.PPurchase)
+		shoppers 	= random.choices(self.Citizens,k=num_people)
+		subclasses  = random.choices(range(model.TSubClasses),weights=weights,k=num_people)
+		ID = [0]*model.TSubClasses
+		for subclass in range(model.TSubClasses):
+			ID[subclass] = random.choices(list(model.WorkplacePlaceholder[subclass].keys()),k=int(num_people*0.5))
 			
+		for i,shopper in enumerate(shoppers):
+			subclass = subclasses[i] 
+			id 		 = ID[subclass][i%int(num_people*0.5)]
 			try:
-				shoppingPlace = self.Workplaces['Commerce'].WorkplacePlaceholder[subclass][id]
+				shoppingPlace = model.WorkplacePlaceholder[subclass][id]
 			except:
 				print(id)
-				print(self.Workplaces['Commerce'].WorkplacePlaceholder)
-				print(self.Workplaces['Commerce'].Number_Workplaces)				
+				print(subclass)
+				# print(model.Number_Workplaces)				
 				raise
-
-			shoppingPlace.Visiting.append(shopper.IntID)
+			shoppingPlace.Visiting.add(shopper)
 			shopper.GroceryPlace = shoppingPlace
-			self.todayShoppers.append(shopper)
+			self.TodayShoppers.add(shopper)
 
 			#print('Person {} of region {} shops at {}'.format(shopper.IntID, self.Name, shoppingPlace))
 
-	def clear_transactions(self):
-		for subclass in range(len(self.Workplaces['Commerce'].Number_Expectation)):
-			for workplace in self.Workplaces['Commerce'].WorkplacePlaceholder[subclass]:
-				self.Workplaces['Commerce'].WorkplacePlaceholder[subclass][workplace].Visiting = []
+	def clear_transactions(self,sector='Commerce'):
+		model = self.SectorHolder[sector]
+		for subclass in range(model.TSubClasses):
+			for workplace in model.WorkplacePlaceholder[subclass]:
+				model.WorkplacePlaceholder[subclass][workplace].Visiting = set()
 
-		for shopper in self.todayShoppers:
+		for shopper in self.TodayShoppers:
 			shopper.GroceryPlace = None
 

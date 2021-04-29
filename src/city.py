@@ -1,4 +1,4 @@
-from .workplaces import Sector
+from .workplaces import Sector, Transactions
 from .person import person
 from .virus import Virus
 from .lockdown import lockdown
@@ -72,7 +72,7 @@ class popdist(object):
 		return self.AgeGroups[Id]
 
 
-class city(Virus,lockdown):
+class city(Virus,lockdown,Transactions):
 	def __init__(self,pm):
 		
 		self.pm             = pm
@@ -86,6 +86,7 @@ class city(Virus,lockdown):
 		self.CityTestingCap = 0
 		self.ComplianceRate = pm.ComplianceRate
 		self.transmissionModes=pm.transmissionModes
+		self.TodayShoppers  = set()
 		super(city, self).__init__(pm)
 	def initialize(self):
 		self.__init_workplaces__()

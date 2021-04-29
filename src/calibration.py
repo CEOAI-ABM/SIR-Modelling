@@ -85,7 +85,7 @@ def sector_proportions(pm1,sector=None,RegionName=None ):
 	EmploymentDist 	= pm1.Employment_params.copy()
 	AgeDist 		= pm1.Population_Dist.copy()
 	AgeGroups 		= pm1.Population_groups.copy()
-	ProblityPurchase = pm1.Transaction_ProbablityOfPurchase
+	ProblityPurchase = pm1.PPurchase
 	Family_size 	= pm1.Family_size.copy()[0]
 
 	# Family_
@@ -187,6 +187,7 @@ def R0(pm1,c=1,RegionName=None):
 	Rperday 		= 0
 	Rsector 		= {}
 	printdata 		= []
+	print(AgeDist)
 	EDays 			= np.average(Incubation_Per,weights=AgeDist)
 	
 	for sector in sectors:

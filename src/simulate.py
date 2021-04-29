@@ -88,7 +88,9 @@ def run(City,pm,C,SAVEDIR):
     print(list(map(lambda x:City.TR[x]*pm.Population,City.TR.keys())))
     City.Citizens[0].infected(City.Today)
     for i in range(pm.SIMULATION_DAYS):
+        City.daily_transactions()
         City.daily_transmissions()
+        
         # print(len(City.AFreeP ))
         print("Day:",City.Today, "R0:",pm.Virus_R0)
         # print(City.print_status())
@@ -116,7 +118,7 @@ def run(City,pm,C,SAVEDIR):
         feed_dict[City.Today,7] = NT 				#Negative Tested  
         feed_dict[City.Today,8] = TCC 			#Total Cumulative cases
         printdata[City.Today] = [City.Today,TCC,TAF,TAQ,TSI,TSH,TSC,TRR,TRD,RR,PT,NT] 
-    
+        City.clear_transactions()
     
     if City.Today != 0:    
         data = {}
