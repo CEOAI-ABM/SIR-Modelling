@@ -108,7 +108,7 @@ class Virus(TruthClassStatus, Testing):
 		for i in params_dict.items():
 			setattr(self,i[0],i[1])
 
-	def updateratetransmissions(self,pm,ratestransmissions=None,c=None):
+	def updateratetransmissions(self,pm,ratestransmissions=None,c=None,r=1):
 		"""Update Transmission Rates
 
 		Args:
@@ -116,7 +116,7 @@ class Virus(TruthClassStatus, Testing):
 			ratestransmissions (dict, optional): if wish to enforce specific Tranmsision Rate. Defaults to None.
 		"""
 		self.VirusC = self.VirusC if c is None else c
-		self.TR = get_TR(c=self.VirusC,pm1=pm) #VirusC is a property of City			
+		self.TR = get_TR(c=self.VirusC,pm1=pm,r=r) #VirusC is a property of City			
 
 	def get_reproduction_rate(self):
 		"""Calculates Reproduction rate which is RepoRateSum/Total people

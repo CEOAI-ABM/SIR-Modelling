@@ -30,10 +30,23 @@ def stat(NAME):
     except KeyError:
         print("Accuracy",NAME,":",0)
     print("===============================================")
+def only_abm(NAME):
+    ABM_DIR = "Results\\ABM_{}".format(NAME)
+   
+    abm_df = pd.read_csv(ABM_DIR+"\\sir_df.csv")
+    cit_df = pd.read_csv(ABM_DIR+'\\register.csv')
+
+    print("R0=",NAME)
+    PID1= abm_df.iloc[abm_df['Infected'].argmax()]['Day']
+    print("Peak infection day=",PID1,'\n')
+    print("Highest Case Load=",abm_df.max()['Infected'],'\n')
+    print("Last Day Cases=",10000-abm_df.iloc[-1]['Suspectible'],'\n')
+    
 # SAVE_DIR = "Plots\\Paper"
 # os.makedirs(SAVE_DIR,exist_ok=True)
-Nos = 9
-R0 = np.linspace(1,4,Nos)
-for i in R0:
-    NAME = str(i)
-    stat(NAME)
+# Nos = 9
+# R0 = np.linspace(1,4,Nos)
+# for i in R0:
+#     NAME = str(i)
+#     stat(NAME)
+only_abm("Social_Distancing")

@@ -168,12 +168,12 @@ class AgentStatusA(object):
 			self.TruthStatus.SIcuP.add(self)
 			self.Last_Added_Placeholder = 4
 
-	def isolate(self):
+	def isolate(self,Today):
 		acceptable_states	= [self.status[0],self.status[1],self.status[3],self.status[4],self.status[5]]
 		assert self.Status in acceptable_states
 		
 		if self.Status == self.status[0] or self.Status == self.status[1]:
-			self.show_symptoms()
+			self.show_symptoms(Today)
 
 		if self.Last_Added_Placeholder != 2:
 			if self.__remove_from_placeholder__(): #If person is in city and removal is successful
@@ -300,17 +300,17 @@ class TestingState(object):
 				#print('City {} added person {}'.format(self.City.Name, self.IntID))
 
 	#pass type of test
-	def tested_positive_func(self, PrivateTest=False): 
+	def tested_positive_func(self,Today, PrivateTest=False): 
 		"""Summary
 		"""
 		self.City.TestedP['Positive'].add(self)
-		self.City.NumTestedPositive.value += 1 
+		self.City.NumTestedPositive += 1 
 
 		if PrivateTest == False: 
 			self.__remove_from_testing_list__()
 		
 		if self.is_Quarentined():
-			self.isolate()
+			self.isolate(Today)
 
 
 	def tested_negative_func(self, PrivateTest=False):

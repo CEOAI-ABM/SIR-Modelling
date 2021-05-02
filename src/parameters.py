@@ -172,10 +172,10 @@ class Parameters:
 
 		try:
 			df_testing 				= pd.read_pickle('Database/Testing/testing_cap.pkl')
-			self.Virus_TestingCap 	= df_testing[self.SimStartDay:]['Total Tested in Kolkata Today'].to_list()	
+			self.TestingCapSeries 	= df_testing[self.SimStartDay:]['Total Tested in Kolkata Today'].to_list()	
 		except:
 			print('\033[93m' ,"WARNING: Testing Time series is not present, taking default value",'\033[0m',sep="")
-			self.Virus_TestingCap 	= [kwargs.get("TestingCap", 1000) for _ in range(self.SIMULATION_DAYS + 5)]
+			self.TestingCapSeries 	= [kwargs.get("TestingCap", 1000) for _ in range(self.SIMULATION_DAYS + 5)]
 		
 		try:
 			df_ict 					= pd.read_pickle('Database/Kolkata/Kolkata_ICT.pkl')

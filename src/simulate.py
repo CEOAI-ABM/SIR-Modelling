@@ -24,7 +24,7 @@ def plot(data:dict,region,pm,plotwhat,SAVE_TO_FILE,SAVEDIR):
     # Plotting
     
     if plotwhat['CapLine']:
-        x,y = [0,data['day'][-1]],[region.Workplaces['Healthcare'].PeopleInSector(),region.Workplaces['Healthcare'].PeopleInSector()]
+        x,y = [0,data['day'][-1]],[region.SectorHolder['Healthcare'].PeopleInSector(),region.SectorHolder['Healthcare'].PeopleInSector()]
         
         # x,y = [0,data['day'][-1]],[kharagpur.Workplace_model['Healthcare'].PeopleInCommercials,kharagpur.Workplace_model['Healthcare'].PeopleInCommercials]
         line = Line2D(x,y,color='Red',linestyle='--')
@@ -83,11 +83,23 @@ def run(City,pm,C,SAVEDIR):
     SAVE_TO_FILE        = True
     df_transmissions 	= pd.DataFrame()
     printdata[0]        = [0,0,0,0,0,0,0,0,0,0,0,0] 
-    City.updateratetransmissions(pm,c=C)
+    City.updateratetransmissions(pm,c=C,r=2)
     print(City.TR)
     print(list(map(lambda x:City.TR[x]*pm.Population,City.TR.keys())))
     City.Citizens[0].infected(City.Today)
+    lockdown_Start = 1000000
+    lockdown_End   = 1000000
+    X              = 1000
+    # updateratetransmissions
+
     for i in range(pm.SIMULATION_DAYS):
+        # if City.Today >= lockdown_Start:
+        #     City.impose_lockdown(lockdown_Start,lockdown_End)
+        #     lockdown_Start = 1000000
+        # if City.Today > lockdown_End:
+        #     City.lift_lockdown()
+        #     lockdown_End = 1000000
+        
         City.daily_transactions()
         City.daily_transmissions()
         
@@ -119,7 +131,10 @@ def run(City,pm,C,SAVEDIR):
         feed_dict[City.Today,8] = TCC 			#Total Cumulative cases
         printdata[City.Today] = [City.Today,TCC,TAF,TAQ,TSI,TSH,TSC,TRR,TRD,RR,PT,NT] 
         City.clear_transactions()
-    
+        # if PT>X:
+        #     lockdown_Start= City.Today-1
+        #     lockdown_End= City.Today+40
+        #     X=10000
     if City.Today != 0:    
         data = {}
         sir = {}
@@ -161,7 +176,7 @@ def run(City,pm,C,SAVEDIR):
             
             results_df.to_csv(SAVEDIR+'results_df.csv', index=False)
             sir_df.to_csv(SAVEDIR+'sir_df.csv', index=False)
-        plotwhat = {'Lockdown':True, 'CapLine':False, 'Asymtomatic':False,
+        plotwhat = {'Lockdown':True, 'CapLine':True, 'Asymtomatic':False,
                     'Hospitalized':True, 'died':True, 'recovered':True, 'Cumulative':True,'positive_tested':True}
         if len(City.LockdownLog) == 0:
             plotwhat['Lockdown'] = False

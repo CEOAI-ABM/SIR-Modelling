@@ -24,7 +24,7 @@ class ContactTracing(object):
 			list: list of contacts, empty list if no contact 
 		"""
 		#Check if person is working
-		if self.Work['Region'] != None:
+		if self.Work['Sector'] != None:
 			#Working people
 			coworkers = self.get_workers(master=self.master) # Get Cowokers
 
@@ -112,10 +112,10 @@ class ContactTracing(object):
 		"""
 		contacts = []
 		
-		contacts += self.__trace_workplace_contacts__(param=self.Region.CT_Efficacy_Workplace)
+		contacts += self.__trace_workplace_contacts__(param=self.City.CT_Efficacy_Workplace)
 		contacts += self.__trace_family_contacts__()
 		#contact += self.__trace_grocery_contacts__()
-		contacts += self.__trace_transport_contacts__(param=self.Region.CT_Efficacy_Transport)
+		contacts += self.__trace_transport_contacts__(param=self.City.CT_Efficacy_Transport)
 
 		#print('Number of contacts traced of person {} = {}'.format(self.Id, len(contacts)))
 
@@ -146,8 +146,8 @@ class Testing(object):
 		self.PTR 			= 0
 		
 		self.TestedP = {
-		'Positive'	: {},
-		'Negative' 	: {}
+		'Positive'	: set(),
+		'Negative' 	: set()
 		}
 
 	def __fresh_test__(self, person):
@@ -223,14 +223,14 @@ class Testing(object):
 			person.tested_negative(PrivateTest)
 			return 'Negative'
 		else:
-			person.tested_positive(PrivateTest)
+			person.tested_positive(self.Today,PrivateTest)
 			if trace:
 				person.trace_contacts() 
 
 			return 'Positive'
 
 
-	def update_city_testing_cap(self, master):
+	def update_city_testing_cap(self, master=None):
 		"""
 		This function is for increasing CityTestingCap
 		Args:
@@ -251,7 +251,7 @@ class Testing(object):
 		Returns:
 			TYPE: Description
 		"""
-		
+		self.update_city_testing_cap()
 		if self.PTR != 0:
 			PublicTestingCap = (0.05/self.PTR)*self.CityTestingCap
 		else:
@@ -261,14 +261,13 @@ class Testing(object):
 		NumTests 	= np.round(min(MaxTests, PublicTestingCap)).astype(int)
 		NumPositives = 0
 		NumPrivate 	= self.CityTestingCap - NumTests
-		
-		#print('Region {} MaxTests = {}, NumTests = {} on day {}'.format(self.Name, MaxTests, NumTests, self.Today))
+		# print('MaxTests = {}, NumTests = {} on day {}'.format(MaxTests, NumTests, self.Today))
 		
 		if NumTests == 0:
 			return 
 		for person_obj in self.TestingQueue[:NumTests]:
 			if person_obj.state == 'Awaiting_Testing':
-				TestingResult = self.test_person(person_obj,self.TracingOn)
+				TestingResult = self.test_person(person_obj,self.pm.TracingOn)
 				if TestingResult == 'Positive':
 					NumPositives += 1
 		
@@ -291,7 +290,7 @@ class Testing(object):
 		for i, person_obj in enumerate(todayTestedPrivate):			
 			if person_obj.state != 'Tested_Positive':
 				person_obj.awaiting_test(PrivateTest=True)
-				self.test_person(person_obj, self.TracingOn, PrivateTest=True) 
+				self.test_person(person_obj, self.pm.TracingOn, PrivateTest=True) 
 			
 			#if i == PrivateTestingCap:
 			#	break

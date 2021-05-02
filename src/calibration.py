@@ -45,7 +45,7 @@ def effective_contact_rate(time,d,const,pm1):
 		return distance_dist(pm1,distance)
 	return gamma(time,const)*p(d)
 
-def get_TR(pm1,c=1):
+def get_TR(pm1,c=1,r=1):
 	"""returns the TR of different sectors
 
 	Args:
@@ -69,7 +69,7 @@ def get_TR(pm1,c=1):
 	sectors += ['Home','Transport','Grocery','Unemployed','Random']
 	TR 				= {}
 	for sector in sectors:
-		TR[sector] = effective_contact_rate(Virus_Params[sector]['Time'],Virus_Params[sector]['Distance'],c,pm1)
+		TR[sector] = effective_contact_rate(Virus_Params[sector]['Time'],Virus_Params[sector]['Distance']*r,c,pm1)
 	
 	#print('complicance rate', pm1.Initial_Compliance_Rate)	
 	# print(TR)

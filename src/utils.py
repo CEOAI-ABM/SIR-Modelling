@@ -48,4 +48,4 @@ def random_suspectibles(Density:float,Population:int,ComplianceRate:float):
 	#print(ComplianceRate)
 	Const 			= 4*math.pi*Density
 	suspectibles 	= Const*((Population/Const)**(1-ComplianceRate))
-	return int(np.round(suspectibles))
+	return int(suspectibles)
