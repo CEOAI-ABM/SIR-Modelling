@@ -26,7 +26,9 @@ To model the SIR models
 |Death_Rates|Death rate per age group |len(Pop_Groups) (int)|
 |Cure_Days|Average number of days to cure |int|
 |Severity|Severity in Mild Moderate Severe per age group |len(Pop_Groups)x3 (float)|
-|UseTran|Proportion of population using transport |float|
+|UseTran|Proportion of population using transport |0&le;float &le;1|
+|Init_CR|Initial Compliance Rate |0&le;float &le;1|
+|SD_Ratio|Social Distancing Ratio |float|
 |Virus_Params| Virus Parameters of non-specialized default interaction spaces, refer SecVirus-V| {string:dict(string:float)}|
 |Commerce_On|Whether Transactions/Grocery default interaction space is enabled or not| bool|
 |PPurchase|Proportion of agents going out to purchase grocercies| float|

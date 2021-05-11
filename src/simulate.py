@@ -83,7 +83,7 @@ def run(City,pm,C,SAVEDIR):
     SAVE_TO_FILE        = True
     df_transmissions 	= pd.DataFrame()
     printdata[0]        = [0,0,0,0,0,0,0,0,0,0,0,0] 
-    City.updateratetransmissions(pm,c=C,r=1)
+    City.updateratetransmissions(pm,c=C,r=pm.SD_Ratio)
     # print(City.TR)
     # print(list(map(lambda x:City.TR[x]*pm.Population,City.TR.keys())))
 

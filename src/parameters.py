@@ -151,7 +151,7 @@ class Parameters:
 		self.SIMULATION_DAYS 	= kwargs.get("Days",300)
 		self.INIT_INFECTED		= kwargs.get("Init_Inf", 10) #Number of People Initially infected 
 		self.PROCESSES 			= kwargs.get("Processes", 16)
-		self.ComplianceRate  	= kwargs.get("StartCR", 0.8)
+		self.ComplianceRate  	= kwargs.get("Init_CR", 0.8)
 		
 		# self.HOLD 			= mp.Value(ctypes.c_bool, 0) #Hold the simulation
 		self.SAVE_TO_FILE 		= True 
@@ -197,3 +197,4 @@ class Parameters:
 		self.CommON 				= kwargs.get("Commerce_On", True)	
 		self.Sim_Name 				= kwargs.get("Name", 'Test')	
 		self.RF						= kwargs.get("Random_Factor", 1)
+		self.SD_Ratio				= kwargs.get("SD_Ratio",1)

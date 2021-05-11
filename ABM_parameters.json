@@ -30,6 +30,9 @@
     "Cure_Days": 14,
     "Severity": [[0.80,0.25,0.05],[0.70,0.30,0.10],[0.30,0.30,0.40]],
     "UseTran":0,
+    "Init_CR":0.8,
+    "SD_Ratio": 1.0,
+    
     "Virus_Params": {
         "Transport" : {"Time":0,"Distance":1}, 
         "Home" 		: {"Time":16,"Distance":3},
@@ -37,11 +40,13 @@
         "Unemployed": {"Time":0,"Distance":1},
         "Random"	: {"Time":0,"Distance":2}
         },
+
     "Commerce_On": true,
     "PPurchase": 0.2,
     "Random_Factor":1,
     "TestingOn":true,
     "TracingOn":false,
+    
     "LockdownPhases": [  
         [15,   21,     "City",     "Hard"      ,"Complete",    0.800,  null,  21],
         [36,   150,     "City",     "TAbsoulte" ,"Complete",    0.700,  1500,  14],
