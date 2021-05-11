@@ -83,9 +83,10 @@ def run(City,pm,C,SAVEDIR):
     SAVE_TO_FILE        = True
     df_transmissions 	= pd.DataFrame()
     printdata[0]        = [0,0,0,0,0,0,0,0,0,0,0,0] 
-    City.updateratetransmissions(pm,c=C,r=2)
-    print(City.TR)
-    print(list(map(lambda x:City.TR[x]*pm.Population,City.TR.keys())))
+    City.updateratetransmissions(pm,c=C,r=1)
+    # print(City.TR)
+    # print(list(map(lambda x:City.TR[x]*pm.Population,City.TR.keys())))
+
     City.Citizens[0].infected(City.Today)
     lockdown_Start = 1000000
     lockdown_End   = 1000000
@@ -93,6 +94,7 @@ def run(City,pm,C,SAVEDIR):
     # updateratetransmissions
 
     for i in range(pm.SIMULATION_DAYS):
+        City.daily_lockdown()
         # if City.Today >= lockdown_Start:
         #     City.impose_lockdown(lockdown_Start,lockdown_End)
         #     lockdown_Start = 1000000

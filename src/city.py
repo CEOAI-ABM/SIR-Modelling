@@ -74,7 +74,6 @@ class popdist(object):
 
 class city(Virus,lockdown,Transactions):
 	def __init__(self,pm):
-		
 		self.pm             = pm
 		self.SectorHolder   = {}
 		self.Citizens       = [0]*pm.Population
@@ -88,6 +87,7 @@ class city(Virus,lockdown,Transactions):
 		self.transmissionModes=pm.transmissionModes
 		self.TodayShoppers  = set()
 		super(city, self).__init__(pm)
+		
 	def initialize(self):
 		self.__init_workplaces__()
 		self.__init_citizens__()

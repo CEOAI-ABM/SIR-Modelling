@@ -30,8 +30,8 @@ class Parameters:
 		self.Family_size 		= kwargs.get("Family_Size",[5,1])
 		self.Density 			= kwargs.get("Density",328)
 		self.Cityname			= kwargs.get("City","Generic") #Name of the city
-		self.Population_groups 	=  kwargs.get("Pop_Groups", [5,18,25,60,80,150]) #Max ages of different groups
-		self.Population_Dist	=  kwargs.get("Pop_Dist", [0.131,0.242,0.126,0.346,0.075,0.080]) # Population distribution between each groups
+		self.Population_groups 	= kwargs.get("Pop_Groups", [5,18,25,60,80,150]) #Max ages of different groups
+		self.Population_Dist	= kwargs.get("Pop_Dist", [0.131,0.242,0.126,0.346,0.075,0.080]) # Population distribution between each groups
 		self.perlakh			= self.Population/100000
 		#============================================================================================
 		#-------------------------- Workplace  Parameters -------------------------------------------

@@ -1,9 +1,9 @@
 {
-    "Name": "Test1",
+    "Name": "Test",
     "Population": 10000,
     "Init_Inf": 1,
     
-    "Days": 100,
+    "Days": 200,
     
     "Randomize": false,
     "Sectors": ["Education","Commerce","Office","Healthcare"],
@@ -24,7 +24,7 @@
     ],
     
     "VName":"V0",
-    "R0": 3.0,
+    "R0": 2.0,
     "Death_Rates":[0.05,0.06,0.20],
     "Inc_Period": [7,7,4],
     "Cure_Days": 14,
@@ -40,5 +40,11 @@
     "Commerce_On": true,
     "PPurchase": 0.2,
     "Random_Factor":1,
-    "TestingOn":false
+    "TestingOn":true,
+    "TracingOn":false,
+    "LockdownPhases": [  
+        [15,   21,     "City",     "Hard"      ,"Complete",    0.800,  null,  21],
+        [36,   150,     "City",     "TAbsoulte" ,"Complete",    0.700,  1500,  14],
+        [155,  200,     "City",     "TRelative" ,"Complete",    0.600,  40,  7]
+    ]
 }
